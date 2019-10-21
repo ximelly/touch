@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="js/scroll.js"></script>
+        <style type="text/css">
+    *{
+        padding:0;
+        margin:0;
+        list-style: none;
+    }
+    .target{
+        width:300px;
+        height:300px;
+        margin:100px auto;
+        border:1px solid #ccc;
+        overflow: hidden;
+        position:relative;
+    }
+    .container{
+        text-align:center;
+        background:#ccc;
+    }
+    .top{
+        height:0;
+        width:100%;
+        text-align: center;
+        background:yellow;
+        position: absolute;
+        top:0;left:0;
+        overflow:hidden;
+    }
+    .topText{
+        width:100%;
+        position: absolute;
+        top:50%;
+        left:50%;
+        transform: translate(-50%, -50%);
+    }
+    .banner{
+        width:100%;
+        height:100px;
+        overflow:hidden;
+    }
+    .bannerInner{
+        width:500%;
+        height:100px;
+    }
+    .bannerInner li{
+        float:left;
+        width:20%;
+        height:100px;
+        line-height:100px;
+        text-align: center;
+        background:linear-gradient(to right,yellow,blue);
+    }
+</style>
+<div class="target">
+    <div class="container">
+        <p>dssssssssssssssssssssss</p>
+        <p>dssssssssssssssssssssss</p>
+        <p>dssssssssssssssssssssss</p>
+        <div class="banner">
+            <ul class="bannerInner">
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>4</li>
+                <li>5</li>
+            </ul>
+        </div>
+        <p>dssssssssssssssssssssss</p>
+        <p>dssssssssssssssssssssss</p>
+        <p>dssssssssssssssssssssss</p>
+        <p>dssssssssssssssssssssss</p>
+        <p>dssssssssssssssssssssss</p>
+        <p>dssssssssssssssssssssss</p>
+        <p>dssssssssssssssssssssss</p>
+        <p>dssssssssssssssssssssss</p>
+        <p>dssssssssssssssssssssss</p>
+        <p>dssssssssssssssssssssss</p>
+    </div>
+    <div class="top">
+        <div class="topText">下拉刷新</div>
+    </div>
+    <div class="bottom">上拉加载更多</div>
+</div>
+<button class="remove">移除事件</button>
+
+<script>
+    let tar=document.querySelector(".target"),
+        remove=document.querySelector(".remove"),
+        topDiv=document.querySelector(".top"),
+        topText=document.querySelector(".topText"),
+        buttom=document.querySelector(".buttom"),
+        banner=document.querySelector(".banner"),
+        bannerInner=document.querySelector(".bannerInner");
+    let scroll=new Scroll(tar,{
+        scrollY:true,
+        scrollX:false,
+        start(){
+            topText.innerHTML="下拉刷新";
+            topDiv.style.transition=``;
+        },
+        move(x,y){
+            console.log(x,y);
+            if(y>y){
+                topDiv.style.height=y+"px";
+                if(y>40){
+                    topText.innerHTML="松开更新";
+                }else{
+                    topText.innerHTML="下拉刷新";
+                }
+            }
+        },
+        end(x,y){
+            topDiv.style.transition=`${scroll.options.animateDuring}ms height ${scroll.options.animateType}`;
+            topDiv.style.height=0+"px";
+            topText.innerHTML="加载中...";
+        }
+    });
+    let startInnerX=0;
+    let bannerScroll=new Scroll(banner,{
+        scrollY:false,
+        scrollX:true,
+        start(x,y){
+            startInnerX=bannerScroll.position.x;
+        },
+        end(x,y){
+            let w=document.querySelector(".banner").offsetWidth,
+                index=-1,
+                bannerInner=document.querySelector(".bannerInner");
+            if(x>startInnerX){//左滑
+                index=-Math.ceil(bannerScroll.position.x/w);
+            }else if(x<startInnerX){//右滑
+                index=-Math.floor(bannerScroll.position.x/w);
+            }
+            if(index>=0&&index<bannerInner.children.length){
+                bannerInner.style.transform=`translateX(-${index*w}px)`;
+                bannerScroll.position.x=-index*w;
+            }
+        }
+    })
+    remove.onclick=function(){
+        scroll.destory();
+    }
+</script>
+
+
+
+</body>
+</html>
+
