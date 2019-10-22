@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="js/scroll.js"></script>
+        <style type="text/css">
+            
+        </style>
+    </head>
+    <body>
+        <button class="button1">button1</button>
+        <button class="button2">button2</button>
+
+        <script>
+            class myEvent extends Event{
+                constructor(...args){
+                    super(...args);
+                    this.name="ximelly";
+                    this.age=29;
+                }
+            }
+
+            let btn1=document.querySelector(".button1");
+            let btn2=document.querySelector(".button2");
+
+            btn1.addEventListener("aaa", function(){
+                console.log("触发btn1的click事件");
+            }, false)
+            btn2.addEventListener("click", function(){
+                let event=new myEvent("aaa");
+                console.log(event);
+                btn1.dispatchEvent(event);
+            }, false)
+        </script>       
+
+</body>
+</html>
+
