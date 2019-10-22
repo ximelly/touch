@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="js/pipe.js"></script>
+    </head>
+    <body>
+        <div id="div1">
+            {{a}}
+        </div>
+        <div id="div2">
+            <button>add</button>
+        </div>
+        <script>
+            let pipe=new Pipe();
+            let $=document.querySelectorAll.bind(document);
+
+            class Component1{
+                constructor(el){
+                    this.el=$(el)[0];
+                    this.a=12;
+                    this.render();
+                    //监听aaa事件
+                    pipe.on("aaa",()=>{
+                        this.a++;
+                        this.render();
+                    })
+                }
+                render(){
+                    this.el.innerHTML=this.a;
+                }
+            }
+
+            class Component2{
+                constructor(el){
+                    this.el=$(el)[0];
+                    this.el.onclick=function(){
+                        pipe.emit("aaa");
+                    }
+                }
+                render(){
+                    this.el.innerHTML=this.a;
+                }
+            }
+
+
+            let component1=new Component1("#div1");
+            let component2=new Component2("#div2 button");
+
+        </script>       
+
+</body>
+</html>
+
