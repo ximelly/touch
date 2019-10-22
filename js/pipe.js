@@ -4,7 +4,9 @@ class Pipe{
     }
     on(type,fn){
         this.pipes[type]=this.pipes[type]||[];
-        this.pipes[type].push(fn);
+        if(this.pipes[type].findIndex(fn)==-1){//findIndex VS indexOf  ？？？
+            this.pipes[type].push(fn);
+        }
     }
     emit(type,...args){
         if(this.pipes[type]){//这个事件是否被监听
