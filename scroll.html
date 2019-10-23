@@ -104,8 +104,7 @@
             topDiv.style.transition=``;
         },
         move(x,y){
-            console.log(x,y);
-            if(y>y){
+            if(y>0){
                 topDiv.style.height=y+"px";
                 if(y>40){
                     topText.innerHTML="松开更新";
