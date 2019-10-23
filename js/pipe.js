@@ -4,8 +4,18 @@ class Pipe{
     }
     on(type,fn){
         this.pipes[type]=this.pipes[type]||[];
-        if(this.pipes[type].findIndex(fn)==-1){//findIndex VS indexOf  ？？？
+        if(this.pipes[type].findIndex(func=>func==fn)==-1){//findIndex VS indexOf  ？？？
             this.pipes[type].push(fn);
+        }
+    }
+    off(type,fn){
+        if(this.pipes[type]){
+            this.pipes[type]=this.pipes[type].filter(func=>{
+                return func!=fn;
+            });
+        }
+        if(this.pipes[type].length==0){
+            delete this.pipes[type];
         }
     }
     emit(type,...args){
