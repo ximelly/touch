@@ -16,8 +16,9 @@ function getElement(el){
 }
 
 
-class Scroll{
+class Scroll extends Pipe{
     constructor(container,options){
+        super();
         this.container=getElement(container);
         assert(this.container,"未找到父容器");
         this.child=this.container.children[0];
@@ -48,10 +49,8 @@ class Scroll{
             let touch=ev.targetTouches[0];
             startX=touch.clientX;
             startY=touch.clientY;
-            if(this.options.start){
-                assert(typeof this.options.start=="function","start is not a function")
-                this.options.start(startX,startY);
-            }
+
+            this.emit("start",startX,startY);
         }
         this._touchmove=ev=>{
             ev.preventDefault();
@@ -84,10 +83,7 @@ class Scroll{
             this.position.y=y;
             this.child.style.transition=`${this.options.animateDuring}ms transform ${this.options.animateType}`;
             this._move(x,y);
-            if(this.options.end){
-                assert(typeof this.options.end=="function","end is not a function")
-                this.options.end(x,y);
-            }
+            this.emit("end",x,y);
         }
         this._move=(x,y)=>{
             if(this.options.scrollY&&this.options.scrollX){
@@ -118,10 +114,7 @@ class Scroll{
                 x=-this.maxX+(x+this.maxX)*this.options.factor;
             }
             this._move(x,y);
-            if(this.options.move){
-                assert(typeof this.options.move=="function","move is not a function")
-                this.options.move(x,y);
-            }
+            this.emit("move",x,y);
         }
         this.child.addEventListener("touchstart",this._touchstart,false);
         this.child.addEventListener("touchmove",this._touchmove,false);

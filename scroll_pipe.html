@@ -3,7 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
-        <script src="js/scroll.js"></script>
+        <script src="js/pipe.js"></script>
+        <script src="js/scroll2.js"></script>
         <style type="text/css">
     *{
         padding:0;
@@ -98,47 +99,58 @@
         bannerInner=document.querySelector(".bannerInner");
     let scroll=new Scroll(tar,{
         scrollY:true,
-        scrollX:false,
-        start(){
-            topText.innerHTML="下拉刷新";
-            topDiv.style.transition=``;
-        },
-        move(x,y){
-            if(y>0){
-                topDiv.style.height=y+"px";
-                if(y>40){
-                    topText.innerHTML="松开更新";
-                }else{
-                    topText.innerHTML="下拉刷新";
-                }
-            }
-        },
-        end(x,y){
-            topDiv.style.transition=`${scroll.options.animateDuring}ms height ${scroll.options.animateType}`;
-            topDiv.style.height=0+"px";
-            topText.innerHTML="加载中...";
-        }
+        scrollX:false
     });
+    scroll.on("start",function(){
+        topText.innerHTML="下拉刷新";
+        topDiv.style.transition=``;
+    })
+    scroll.on("start",function(x,y){
+        console.log(x,y);
+    })
+    scroll.on("start",function(x,y){
+        console.log(x+y);
+    })
+
+    scroll.on("move",function(x,y){
+        if(y>0){
+            topDiv.style.height=y+"px";
+            if(y>40){
+                topText.innerHTML="松开更新";
+            }else{
+                topText.innerHTML="下拉刷新";
+            }
+        }
+    })
+
+    scroll.on("end",function(){
+        topDiv.style.transition=`${scroll.options.animateDuring}ms height ${scroll.options.animateType}`;
+        topDiv.style.height=0+"px";
+        topText.innerHTML="加载中...";
+    })
+
     let startInnerX=0;
     let bannerScroll=new Scroll(banner,{
         scrollY:false,
-        scrollX:true,
-        start(x,y){
-            startInnerX=bannerScroll.position.x;
-        },
-        end(x,y){
-            let w=document.querySelector(".banner").offsetWidth,
+        scrollX:true
+    })
+    bannerScroll.on("start",()=>{
+        startInnerX=bannerScroll.position.x;
+    })
+    bannerScroll.on("end",(x,y)=>{
+        let w=document.querySelector(".banner").offsetWidth,
                 index=-1,
                 bannerInner=document.querySelector(".bannerInner");
-            if(x>startInnerX){//左滑
-                index=-Math.ceil(bannerScroll.position.x/w);
-            }else if(x<startInnerX){//右滑
-                index=-Math.floor(bannerScroll.position.x/w);
-            }
-            if(index>=0&&index<bannerInner.children.length){
-                bannerInner.style.transform=`translateX(-${index*w}px)`;
-                bannerScroll.position.x=-index*w;
-            }
+        if(x>startInnerX){//左滑
+        console.log("左滑");
+            index=-Math.ceil(bannerScroll.position.x/w);
+        }else if(x<startInnerX){//右滑
+        console.log("右滑");
+            index=-Math.floor(bannerScroll.position.x/w);
+        }
+        if(index>=0&&index<bannerInner.children.length){
+            bannerInner.style.transform=`translateX(-${index*w}px)`;
+            bannerScroll.position.x=-index*w;
         }
     })
     remove.onclick=function(){
